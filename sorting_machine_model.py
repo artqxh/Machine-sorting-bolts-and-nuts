@@ -1,12 +1,12 @@
 import os, shutil
 
 # Remove folder
-shutil.rmtree('/home/artur/python_projects/Machine-sorting-bolts-and-nuts/images/bolts_and_nuts_small')
+shutil.rmtree('/home/artur/python_projects/Machine-sorting-bolts-and-nuts/data/bolts_and_nuts_small')
 
 # Copying images to sets and subsets
-original_dataset_dir = '/home/artur/python_projects/Machine-sorting-bolts-and-nuts/images/original_data'
+original_dataset_dir = '/home/artur/python_projects/Machine-sorting-bolts-and-nuts/data/original_data'
 
-base_dir = '/home/artur/python_projects/Machine-sorting-bolts-and-nuts/images/bolts_and_nuts_small'
+base_dir = '/home/artur/python_projects/Machine-sorting-bolts-and-nuts/data/bolts_and_nuts_small'
 os.mkdir(base_dir)
 
 train_dir = os.path.join(base_dir, 'train')
@@ -30,38 +30,38 @@ os.mkdir(validation_nuts_dir)
 test_nuts_dir = os.path.join(test_dir, 'nuts')
 os.mkdir(test_nuts_dir)
 
-fnames = ['bolt.{}.jpg'.format(i) for i in range(10)]
+fnames = ['bolt.{}.png'.format(i) for i in range(100)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(train_bolts_dir, fname)
     shutil.copyfile(src, dst)
 
-fnames = ['bolt.{}.jpg'.format(i) for i in range(10, 15)]
+fnames = ['bolt.{}.png'.format(i) for i in range(100, 150)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(validation_bolts_dir, fname)
     shutil.copyfile(src, dst)
 
-fnames = ['bolt.{}.jpg'.format(i) for i in range(15, 20)]
+fnames = ['bolt.{}.png'.format(i) for i in range(150, 200)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(test_bolts_dir, fname)
     shutil.copyfile(src, dst)
 
 
-fnames = ['nut.{}.jpg'.format(i) for i in range(10)]
+fnames = ['nut.{}.png'.format(i) for i in range(100)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(train_nuts_dir, fname)
     shutil.copyfile(src, dst)
 
-fnames = ['nut.{}.jpg'.format(i) for i in range(10, 15)]
+fnames = ['nut.{}.png'.format(i) for i in range(100, 150)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(validation_nuts_dir, fname)
     shutil.copyfile(src, dst)
 
-fnames = ['nut.{}.jpg'.format(i) for i in range(15, 20)]
+fnames = ['nut.{}.png'.format(i) for i in range(150, 200)]
 for fname in fnames:
     src = os.path.join(original_dataset_dir, fname)
     dst = os.path.join(test_nuts_dir, fname)
@@ -98,16 +98,17 @@ from keras.preprocessing.image import ImageDataGenerator
 train_datagen = ImageDataGenerator(rescale=1./255)
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = train_datagen.flow_from_directory(train_dir, target_size=(150, 150), batch_size=20, class_mode='binary')
-validation_generator = test_datagen.flow_from_directory(validation_dir, target_size=(150, 150), batch_size=20, class_mode='binary')
+train_generator = train_datagen.flow_from_directory(train_dir, target_size=(150, 150), batch_size=10, class_mode='binary')
+validation_generator = test_datagen.flow_from_directory(validation_dir, target_size=(150, 150), batch_size=10, class_mode='binary')
 
 
 # Model fitting
-history = model.fit_generator(train_generator, steps_per_epoch=1, epochs=5, validation_data=validation_generator, validation_steps=1)
+history = model.fit_generator(train_generator, steps_per_epoch=3, epochs=30, validation_data=validation_generator, validation_steps=3)
 
 
 # Save the model
 model.save('bolts_and_nuts_small_1.h5')
+
 
 # Data visualization
 import matplotlib.pyplot as plt
@@ -134,16 +135,5 @@ plt.legend()
 plt.show()
 
 
-# Processing one image
-import numpy as np
-from keras.preprocessing import image
 
-img_path = '/home/artur/python_projects/Machine-sorting-bolts-and-nuts/image6.jpg'
-img = image.load_img(img_path, target_size=(150, 150))
-img_tensor = image.img_to_array(img)
-img_tensor = np.expand_dims(img_tensor, axis=0)
-img_tensor /= 255
-print(img_tensor.shape)
 
-plt.imshow(img_tensor[0])
-plt.show()
