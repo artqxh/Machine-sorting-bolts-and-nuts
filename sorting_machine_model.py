@@ -89,23 +89,57 @@ model.add(layers.Dense(1, activation='sigmoid'))
 # Trained model configuration
 from tensorflow.keras import optimizers
 
-model.compile(loss='binary_crossentropy', optimizer=optimizers.RMSprop(lr=1e-4), metrics=['acc'])
+model.compile(
+    loss='binary_crossentropy',
+    optimizer=optimizers.RMSprop(learning_rate=1e-4),
+    metrics=['acc']
+    )
 
 
 # Loading images
 from keras.preprocessing.image import ImageDataGenerator
 
-train_datagen = ImageDataGenerator(rescale=1./255)
+image_size = (150, 150)
+batch_size = 10
+epochs = 20
+steps_per_epoch = 10
+validation_steps = 10
+
+
+# Training with the use of data augmentation
+train_datagen = ImageDataGenerator(
+    rescale=1./255,
+    rotation_range=50,
+    width_shift_range=0.5,
+    height_shift_range=0.5,
+    shear_range=0.5,
+    zoom_range=0.5,
+    horizontal_flip=True
+)
+
 test_datagen = ImageDataGenerator(rescale=1./255)
 
-train_generator = train_datagen.flow_from_directory(train_dir, target_size=(150, 150), batch_size=10, class_mode='binary')
-validation_generator = test_datagen.flow_from_directory(validation_dir, target_size=(150, 150), batch_size=10, class_mode='binary')
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=image_size,
+    batch_size=batch_size,
+    class_mode='binary'
+)
 
+validation_generator = test_datagen.flow_from_directory(
+    validation_dir,
+    target_size=image_size,
+    batch_size=batch_size,
+    class_mode='binary'
+)
 
-# Model fitting
-history = model.fit_generator(train_generator, steps_per_epoch=3, epochs=30, validation_data=validation_generator, validation_steps=3)
-
-
+history = model.fit(
+    train_generator,
+    steps_per_epoch=steps_per_epoch,
+    epochs=epochs,
+    validation_data=validation_generator,
+    validation_steps=validation_steps
+)
 # Save the model
 model.save('bolts_and_nuts_small_1.h5')
 
