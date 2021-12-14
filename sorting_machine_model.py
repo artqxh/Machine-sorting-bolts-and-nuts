@@ -133,7 +133,3 @@ plt.title('Strata trenowania i walidacji')
 plt.legend()
 
 plt.show()
-
-
-
-
