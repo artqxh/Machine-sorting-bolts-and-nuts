@@ -1,7 +1,7 @@
 import cv2
 import time
 
-cap = cv2.VideoCapture(2)
+cap = cv2.VideoCapture(-1)
 ret, frame = cap.read()
 
 def takePicture():
