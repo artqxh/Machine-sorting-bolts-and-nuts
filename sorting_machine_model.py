@@ -1,4 +1,5 @@
-import os, shutil
+import os
+import shutil
 
 # Remove folder
 shutil.rmtree('/home/artur/python_projects/Machine-sorting-bolts-and-nuts/data/bolts_and_nuts_small')
@@ -82,6 +83,7 @@ model.add(layers.Conv2D(128, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 
 model.add(layers.Flatten())
+model.add(layers.Dropout(0.5))
 model.add(layers.Dense(512, activation='relu'))
 model.add(layers.Dense(1, activation='sigmoid'))
 
@@ -101,20 +103,20 @@ from keras.preprocessing.image import ImageDataGenerator
 
 image_size = (150, 150)
 batch_size = 10
-epochs = 20
-steps_per_epoch = 10
+epochs = 15
+steps_per_epoch = 20
 validation_steps = 10
 
 
 # Training with the use of data augmentation
 train_datagen = ImageDataGenerator(
     rescale=1./255,
-    rotation_range=50,
-    width_shift_range=0.5,
-    height_shift_range=0.5,
-    shear_range=0.5,
-    zoom_range=0.5,
-    horizontal_flip=True
+    rotation_range=45,
+    width_shift_range=0.4,
+    height_shift_range=0.4,
+    shear_range=0.4,
+    zoom_range=0.4,
+    horizontal_flip=False
 )
 
 test_datagen = ImageDataGenerator(rescale=1./255)
